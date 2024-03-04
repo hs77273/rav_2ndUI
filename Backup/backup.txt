@@ -1,0 +1,289 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QSpacerItem, QSizePolicy
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QMovie, QIcon
+
+class MyWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setGeometry(100, 100, 1920, 1080)
+        self.setWindowTitle("CyICMS")
+        self.setStyleSheet("background-color: #000000;")
+
+        logo_path = "Images/Logo.png"
+        original_pixmap = QPixmap(logo_path)
+        target_size = original_pixmap.size().scaled(300, 300, Qt.KeepAspectRatio)
+        resized_pixmap = original_pixmap.scaled(target_size, Qt.KeepAspectRatio)
+        logo_label = QLabel(self)
+        logo_label.setPixmap(resized_pixmap)
+        logo_label.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+
+        gif_path = "Images/Face.gif"
+        gif_label = QLabel(self)
+        gif_movie = QMovie(gif_path)
+        gif_label.setMovie(gif_movie)
+        gif_movie.start()
+
+        gif_label.setFixedSize(240, 240)
+        gif_label.setScaledContents(True)
+
+        left_coloumn = QWidget(self)
+        left_coloumn.setStyleSheet("background-color: #171B2E;")
+
+        left_layout = QVBoxLayout(left_coloumn)
+        left_layout.addWidget(logo_label, alignment=Qt.AlignTop)
+
+        spacer_item_top = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        left_layout.addItem(spacer_item_top)
+
+        left_layout.addWidget(gif_label, alignment=Qt.AlignVCenter | Qt.AlignHCenter)
+
+        spacer_item_between = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed)
+        left_layout.addItem(spacer_item_between)
+
+        start_monitoring_button = QPushButton("Start Monitoring", self)
+        start_monitoring_button.setStyleSheet("background-color: #3498db; color: #ffffff; font-weight: bold;")
+        start_monitoring_button.setFixedSize(260, 40)
+        left_layout.addWidget(start_monitoring_button, alignment=Qt.AlignVCenter | Qt.AlignHCenter)
+
+        spacer_item_bottom = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        left_layout.addItem(spacer_item_bottom)
+
+        video_button = QPushButton(self)
+        video_button.setIcon(QIcon("Icons/video.png"))
+        video_button.setFixedSize(40, 40)
+
+        speaker_button = QPushButton(self)
+        speaker_button.setIcon(QIcon("Icons/speaker.png"))
+        speaker_button.setFixedSize(40, 40)
+
+        bottom_layout = QHBoxLayout()
+
+        bottom_layout.addWidget(speaker_button, alignment=Qt.AlignBottom | Qt.AlignLeft)
+        bottom_layout.addSpacing(200)
+        bottom_layout.addWidget(video_button, alignment=Qt.AlignBottom | Qt.AlignRight)
+
+        left_layout.addLayout(bottom_layout)
+
+        right_layout = QVBoxLayout()
+
+        text_label = QLabel("INTELLIGENT CABIN MANAGEMENT SYSTEM", self)
+        text_label.setStyleSheet("color: #ffffff; font-size: 28px; font-weight: bold;")
+        right_layout.addWidget(text_label, alignment=Qt.AlignTop | Qt.AlignCenter)
+        
+        spacer_item_right = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        right_layout.addItem(spacer_item_right)
+
+        object_rect_widget = QWidget(self)
+        object_rect_widget.setFixedSize(600, 920)
+        object_rect_widget.setStyleSheet("background-color: #333333; border-radius: 20px;")
+
+        object_label = QLabel("OBJECT MONITORING", object_rect_widget)
+        object_label.setStyleSheet("color: #00C8F0; font-size: 28px; font-weight: bold;")
+        object_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+
+        layout = QVBoxLayout(object_rect_widget)
+        layout.addWidget(object_label)
+
+        image_names = ["gun.png", "knife.png", "bat.png", "fork.png", "scissors.png"]
+        object_names = ["Gun", "Knife", "Bat", "Fork", "Scissors"]
+        
+        for image_name, object_name in zip(image_names, object_names):
+            original_image = QPixmap("Icons/" + image_name)
+            target_size = original_image.size().scaled(70, 70, Qt.KeepAspectRatio)
+            resized_image = original_image.scaled(target_size, Qt.KeepAspectRatio)
+
+            image_layout = QHBoxLayout()
+            vertical_layout = QVBoxLayout()
+
+            image_label = QLabel()
+            image_label.setPixmap(resized_image)
+            image_label.setAlignment(Qt.AlignTop | Qt.AlignCenter)
+            vertical_layout.addWidget(image_label)
+            
+            object_name_label = QLabel(object_name)
+            object_name_label.setStyleSheet("color: #3498db; font-size: 16px; font-weight: bold;")
+            object_name_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+            vertical_layout.addWidget(object_name_label)
+
+            rect_layout = QHBoxLayout()
+            label = QLabel("-", object_rect_widget)
+            label.setStyleSheet("color: #3498db; font-size: 28px; font-weight: bold;")
+            rect_layout.addWidget(label)
+            rect_layout.addSpacing(30)
+
+            rect_label = QLabel()
+            rect_label.setStyleSheet("background-color: #000000; border-radius: 5px;")
+            rect_label.setFixedSize(380, 80)
+            rect_layout.addWidget(rect_label)
+
+            image_layout.addLayout(vertical_layout)
+            image_layout.addLayout(rect_layout)
+
+            spacer_item = QSpacerItem(40, 10, QSizePolicy.Minimum, QSizePolicy.Expanding)
+            layout.addSpacerItem(spacer_item)
+
+            layout.addLayout(image_layout)
+            
+        right_spacer = QSpacerItem(20, 10, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        layout.addItem(right_spacer)
+
+        right_layout.addWidget(object_rect_widget, alignment=Qt.AlignTop | Qt.AlignRight)
+
+        behaviour_rect_widget = QWidget(self)
+        behaviour_rect_widget.setFixedSize(850, 920)
+        behaviour_rect_widget.setStyleSheet("background-color: #333333; border-radius: 20px;")
+        
+        behaviour_label = QLabel("BEHAVIOUR MONITORING", behaviour_rect_widget)
+        behaviour_label.setStyleSheet("color: #00C8F0; font-size: 28px; font-weight: bold;")
+        behaviour_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+
+        behaviour_layout = QVBoxLayout(behaviour_rect_widget)
+        behaviour_layout.addWidget(behaviour_label)
+        heading_spacer = QSpacerItem(0, 80, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        behaviour_layout.addItem(heading_spacer)
+        
+        Empty_pixmap = QPixmap('Icons/Empty.png')
+        Empty_pixmap = Empty_pixmap.scaled(100, 100, Qt.KeepAspectRatio)
+        
+        Aggressive_pixmap = QPixmap('Icons/angry.png')
+        Aggressive_pixmap = Aggressive_pixmap.scaled(78, 78, Qt.KeepAspectRatio)
+        
+        Non_Aggressive_pixmap = QPixmap('Icons/smile.png')
+        Non_Aggressive_pixmap = Non_Aggressive_pixmap.scaled(78, 78, Qt.KeepAspectRatio)
+        
+        horizontal_layout_A = QHBoxLayout()
+        
+        rectangle_A2 = QLabel()
+        rectangle_A2.setStyleSheet("background-color: #000000; border-radius: 5px;")
+        rectangle_A2.setFixedSize(300, 150)
+        label_A2 = QLabel("SEAT: A2")
+        label_A2.setStyleSheet("color: #00C8F0; font-size: 16px; font-weight: bold;")
+        image_label_A2 = QLabel()
+        image_label_A2.setAlignment(Qt.AlignCenter)
+        image_label_A2.setPixmap(Empty_pixmap)
+        status_text_A2 = QLabel("Status: Empty")
+        status_text_A2.setStyleSheet("color: white; font-weight: bold; font-size: 16px;")
+        status_text_A2.setAlignment(Qt.AlignCenter)
+
+        layout_A2 = QVBoxLayout()
+        layout_A2.addWidget(label_A2, alignment=Qt.AlignTop | Qt.AlignHCenter)
+        layout_A2.addWidget(image_label_A2, alignment=Qt.AlignCenter)
+        layout_A2.addWidget(status_text_A2, alignment=Qt.AlignCenter)
+        layout_A2.addStretch(1)
+        rectangle_A2.setLayout(layout_A2)
+
+        horizontal_layout_A.addWidget(rectangle_A2)
+
+        horizontal_layout_A.addStretch(1)
+
+        rectangle_A1 = QLabel()
+        rectangle_A1.setStyleSheet("background-color: #000000; border-radius: 5px;")
+        rectangle_A1.setFixedSize(300, 150)
+        label_A1 = QLabel("SEAT: A1")
+        label_A1.setStyleSheet("color: #00C8F0; font-size: 16px; font-weight: bold;")
+        image_label_A1 = QLabel()
+        image_label_A1.setAlignment(Qt.AlignCenter)
+        image_label_A1.setPixmap(Empty_pixmap)
+        status_text_A1 = QLabel("Status: Empty")
+        status_text_A1.setStyleSheet("color: white; font-weight: bold; font-size: 16px;")
+        status_text_A1.setAlignment(Qt.AlignCenter)
+
+        layout_A1 = QVBoxLayout()
+        layout_A1.addWidget(label_A1, alignment=Qt.AlignTop | Qt.AlignHCenter)
+        layout_A1.addWidget(image_label_A1, alignment=Qt.AlignCenter)
+        layout_A1.addWidget(status_text_A1, alignment=Qt.AlignCenter)
+        layout_A1.addStretch(1)
+        rectangle_A1.setLayout(layout_A1)
+
+        horizontal_layout_A.addWidget(rectangle_A1)
+
+        behaviour_layout.addLayout(horizontal_layout_A)
+        layout_spacer = QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        behaviour_layout.addItem(layout_spacer)
+        
+        horizontal_layout_B = QHBoxLayout()
+
+        rectangle_B2 = QLabel()
+        rectangle_B2.setStyleSheet("background-color: #000000; border-radius: 5px;")
+        rectangle_B2.setFixedSize(300, 150)
+        label_B2 = QLabel("SEAT: B2")
+        label_B2.setStyleSheet("color: #00C8F0; font-size: 16px; font-weight: bold;")
+        image_label_B2 = QLabel()
+        image_label_B2.setAlignment(Qt.AlignCenter)
+        image_label_B2.setPixmap(Empty_pixmap)
+        status_text_B2 = QLabel("Status: Empty")
+        status_text_B2.setStyleSheet("color: white; font-weight: bold; font-size: 16px;")
+        status_text_B2.setAlignment(Qt.AlignCenter)
+
+        layout_B2 = QVBoxLayout()
+        layout_B2.addWidget(label_B2, alignment=Qt.AlignTop | Qt.AlignHCenter)
+        layout_B2.addWidget(image_label_B2, alignment=Qt.AlignCenter)
+        layout_B2.addWidget(status_text_B2, alignment=Qt.AlignCenter)
+        layout_B2.addStretch(1)
+        rectangle_B2.setLayout(layout_B2)
+
+        horizontal_layout_B.addWidget(rectangle_B2)
+
+        horizontal_layout_B.addStretch(1)
+
+        rectangle_B1 = QLabel()
+        rectangle_B1.setStyleSheet("background-color: #000000; border-radius: 5px;")
+        rectangle_B1.setFixedSize(300, 150)
+        label_B1 = QLabel("SEAT: B1")
+        label_B1.setStyleSheet("color: #00C8F0; font-size: 16px; font-weight: bold;")
+        image_label_B1 = QLabel()
+        image_label_B1.setAlignment(Qt.AlignCenter)
+        image_label_B1.setPixmap(Empty_pixmap)
+        status_text_B1 = QLabel("Status: Empty")
+        status_text_B1.setStyleSheet("color: white; font-weight: bold; font-size: 16px;")
+        status_text_B1.setAlignment(Qt.AlignCenter)
+
+        layout_B1 = QVBoxLayout()
+        layout_B1.addWidget(label_B1, alignment=Qt.AlignTop | Qt.AlignHCenter)
+        layout_B1.addWidget(image_label_B1, alignment=Qt.AlignCenter)
+        layout_B1.addWidget(status_text_B1, alignment=Qt.AlignCenter)
+        layout_B1.addStretch(1)
+        rectangle_B1.setLayout(layout_B1)
+
+        horizontal_layout_B.addWidget(rectangle_B1)
+
+        behaviour_layout.addLayout(horizontal_layout_B)
+        
+        spacer = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        behaviour_layout.addItem(spacer)
+        
+        msg_rect = QLabel()
+        msg_rect.setStyleSheet("background-color: #000000; border-radius: 5px;")
+        msg_rect.setFixedSize(680, 220)
+        heading = QLabel("CABIN OVERVIEW")
+        heading.setStyleSheet("color: #00C8F0; font-size: 20px; font-weight: bold;")
+        
+        behaviour_msg = QLabel("All 4 Seats are Empty")
+        behaviour_msg.setStyleSheet("color: #ffffff; font-size: 20px; font-weight: bold;")
+        
+        object_msg = QLabel("No Objects Detected")
+        object_msg.setStyleSheet("color: #ffffff; font-size: 20px; font-weight: bold;")
+        
+        msg_layout = QVBoxLayout()
+        msg_layout.addWidget(heading, alignment=Qt.AlignTop | Qt.AlignHCenter)
+        msg_layout.addWidget(behaviour_msg, alignment=Qt.AlignCenter)
+        msg_layout.addWidget(object_msg, alignment=Qt.AlignCenter)
+        msg_rect.setLayout(msg_layout)
+        behaviour_layout.addWidget(msg_rect, alignment=Qt.AlignHCenter)
+        behaviour_layout.addSpacing(60)
+        
+        main_layout = QHBoxLayout(self)
+        main_layout.addWidget(left_coloumn, alignment=Qt.AlignLeft)
+        main_layout.addWidget(behaviour_rect_widget, alignment=Qt.AlignBottom | Qt.AlignRight)
+        main_layout.addSpacing(20)
+        main_layout.addLayout(right_layout)
+
+        self.setLayout(main_layout)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MyWindow()
+    window.show()
+    sys.exit(app.exec_())
